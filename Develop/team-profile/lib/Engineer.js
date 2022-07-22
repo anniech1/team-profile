@@ -12,7 +12,7 @@ class Engineer extends Employee {
     }
 
     getRole(){
-        const obj = new Employee()
+        const obj = new Employee();
         return "Engineer"
     }
 }
