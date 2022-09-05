@@ -13,7 +13,7 @@ const generateHtml = require('./util/generateHtml')
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
-function compileEmployees(){
+function addEmployee(){
     function addNewEmployee(){
         inquirer.prompt ([
             {
@@ -69,7 +69,7 @@ function addEngineer() {
       const engineer = new Engineer(answers.engName, answers.engId, answers.engEmail, answers.engGithub);
         teamMembers.push(engineer);
         // ask if this section is what's causing the error
-        compileEmployees();
+        addEmployee();
     });
 }
 
@@ -77,33 +77,33 @@ function addEngineer() {
     inquirer.prompt([
       
       {
-        type: "input",
         name: "internName",
-        message: "What is the intern's name?"
+        type: "input",
+        message: "What is their name?"
       },
 
       {
-        type: "input",
         name: "internId",
-        message: "What is the intern's employee ID number?" 
+        type: "input",
+        message: "What is their ID number?" 
       },
 
       {
-        type: "input",
         name: "internEmail",
-        message: "What is the intern's email address?"
+        type: "input",
+        message: "What is their email address?"
       },
 
       {
-        type: "input",
         name: "internSchool",
-        message: "What school does the intern attend?"
+        type: "input",
+        message: "What school do they go to?"
       }
 
     ]).then(answers => {
       const intern = new Intern(answers.internName, answers.internId, answers.internEmail, answers.internSchool);
       teamMembers.push(intern);
-      compileEmployees();
+      addEmployee();
     });
 
   }
@@ -112,47 +112,37 @@ function addManager() {
   inquirer.prompt ([
     
     {
-      type: "input",
       name: "managerName",
-      message: "What is the manager's name?"
+      type: "input",
+      message: "What is their name?"
     },
 
     {
-      type: "input",
       name: "managerId",
-      message: "What is the manager's employee ID number?"
+      type: "input",
+      message: "What is their ID number?"
     },
 
     {
-      type: "input",
       name: "managerEmail",
-      message: "What is the manager's email address?"
+      type: "input",
+      message: "What is their email address?"
     },
 
     {
-      type: "input",
       name: "managerOfficeNumber",
-      message: "What is the manager's office number?"
+      type: "input",
+      message: "What is their office number?"
     }
 
   ]).then(answers => {
     const manager = new Manager(answers.managerName, answers.managerId, answers.managerEmail, answers.managerOfficeNumber);
     teamMembers.push(manager);
-    compileEmployees();
+    addEmployee();
   });
 
 }
 
-// function htmlOutput () {
-// fs.writeFileSync(outputPath, generateHtml(teamMembers), "UTF-8")
-
-// }
-
-// compileEmployees();
-
-// }
-
-// compileEmployees();
 
 // ask if this might also be the section that's causing it
 
@@ -171,4 +161,14 @@ function addManager() {
 //     fs.writeFileSync(outputPath, generateTeam(teamMembers))}
 //     addNewEmployee();
 
-// compileEmployees();
+// addEmployee();
+
+function htmlOutput () {
+    fs.writeFileSync(outputPath, generateHtml(teamMembers), "UTF-8")
+    }
+
+addEmployee();
+
+}
+
+addEmployee();
