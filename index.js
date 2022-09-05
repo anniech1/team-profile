@@ -1,13 +1,24 @@
-const inquirer = require("inquirer");
+const inquirer = require('inquirer');
 const fs = require('fs'); 
+const path = require('path');
 
 const Engineer = require('./Develop/team-profile/lib/Engineer');
 const Intern = require('./Develop/team-profile/lib/Intern');
 const Manager = require('./Develop/team-profile/lib/Manager');
 
+const teamMembers =[];
+
 const generateHTML = require('./Develop/team-profile/util/generateHtml')
 
+const OUTPUT_DIR = path.resolve(__dirname, "output");
+const outputPath = path.join(OUTPUT_DIR, "team.html");
 
+function createTeam(){
+    generateHTML();
+    addEmployee();
+}
+
+function addEmployee(){
  inquirer.prompt ([
         {
             name: "name",
@@ -25,14 +36,60 @@ const generateHTML = require('./Develop/team-profile/util/generateHtml')
             type: "input"
         },
         {
-            name: "officeNumber",
-            message: "What is their office number?",
-            type: "input"
+            name: "role",
+            message: "What is their role?",
+            type: "list",
+            chocies : [
+                "Engineer",
+                "Intern",
+                "Manager"
+            ]
         },
- ]).then(answers => {
-        fs.writeFile(`./output/team-${answers.Manager.name}.html`, generateHTML, (err) => err ? console.error(err) : console.log('success!'));
+ ]).then(function({name, id, email, role}){
+    let employeeDetail = "";
+    if  (role === "Engineer") {
+        employeeDetail = "GitHub username";
+    } else if (role === "Intern") {
+        employeeDetail = "school name";
+    } else if (role === "Manager"){
+        employeeDetail = "office phone number";
+    }
+    inquirer.prompt([{ 
+        name: "employeeDetail",
+        message: `What is their ${employeeDetail}?`,
+        type: "input"
+    },
+    {
+        name: "addEmployee",
+        message: "Add another employee to the team?",
+        chocies : [
+            "Yes!",
+            "No thank you"
+        ]
+    }]).then(function({employeeDetail, addEmployee}){
+        let newEmployee;
+        if (role === "Engineer") {
+            newEmployee = new Engineer(name, id, email, employeeDetail);
+        } else if (role === "Intern") {
+            newEmployee = new Intern(name, id, email, employeeDetail);
+        } else {
+            newEmployee = new Manager(name, id, email, employeeDetail);
+        }
+        employees.push(newEmployee);
+        generateHTML(newEmployee)
+        .then(function() {
+            if (moreMembers === "yes") {
+                addEmployee();
+            } else {
+        (answers => {fs.writeFile(`./output/team-${answers.Manager.name}.html`, generateHTML, (err) => err ? console.error(err) : console.log('success!'));
+         })
+        }
     })
-    
+ })
+ 
+ 
+ 
+} 
 
 
 
@@ -45,5 +102,4 @@ const generateHTML = require('./Develop/team-profile/util/generateHtml')
 //         } else {
 //             console.log("Your team profile has been successfully created! Please check out the index.html")
 //         }
-//     })
-// }; 
+//     }))
