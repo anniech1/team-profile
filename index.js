@@ -2,93 +2,162 @@ const inquirer = require('inquirer');
 const fs = require('fs'); 
 const path = require('path');
 
-const Engineer = require('./Develop/team-profile/lib/Engineer');
-const Intern = require('./Develop/team-profile/lib/Intern');
-const Manager = require('./Develop/team-profile/lib/Manager');
+const Engineer = require('./lib/Engineer');
+const Intern = require('./lib/Intern');
+const Manager = require('./lib/Manager');
 
-const teamMembers =[];
+var teamMembers = [];
 
-const generateHTML = require('./Develop/team-profile/util/generateHtml')
+const generateHtml = require('./util/generateHtml')
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
-function createTeam(){
-    function addEmployee(){
+function compileEmployees(){
+    function addNewEmployee(){
         inquirer.prompt ([
             {
-                name: "name",
-                message: "What is the team manager's name?",
-                type: "input"
-            },
-            {
-                name: "id",
-                message: "What is their employee id?",
-                type: "input"
-            },
-            {
-                name: "email",
-                message: "What is their email address?",
-                type: "input"
-            },
-            {
-                name: "role",
-                message: "What is their role?",
+                name: "employeeType",
+                message: "Which type of role are you adding to the team? Or do you want to generate your HTML file?",
                 type: "list",
-                chocies : [
-                    "Engineer",
-                    "Intern",
-                    "Manager"
-                ]
-            },
-    ]).then(function({name, id, email, role}){
-        let employeeDetail = "";
-        if  (role === "Engineer") {
-            employeeDetail = "GitHub username";
-        } else if (role === "Intern") {
-            employeeDetail = "school name";
-        } else if (role === "Manager"){
-            employeeDetail = "office phone number";
-        }}
-        inquirer.prompt([{ 
-            name: "employeeDetail",
-            message: `What is their ${employeeDetail}?`,
-            type: "input"
-        },
-        {
-            name: "addEmployee",
-            message: "Add another employee to the team?",
-            chocies : [
-                "Yes!",
-                "No thank you"
-            ]
-        }]).then(function({employeeDetail, addEmployee}){
-            let newEmployee;
-            if (role === "Engineer") {
-                newEmployee = new Engineer(name, id, email, employeeDetail);
-            } else if (role === "Intern") {
-                newEmployee = new Intern(name, id, email, employeeDetail);
-            } else {
-                newEmployee = new Manager(name, id, email, employeeDetail);
-            })
-
-        }
-/// i think the issue is here?
-
-            employees.push(newEmployee);
-            generateHTML(newEmployee)
-            .then(function() {
-                if (moreMembers === "yes") {
-                    addEmployee();
-                } else {
-            (answers => {fs.writeFile(`./output/team-${answers.Manager.name}.html`, generateHTML, (err) => err ? console.error(err) : console.log('success!'));
-            })
+                choices: ["Engineer","Intern","Manager","None, please generate my HTML file!"]
+            }]).then(function(userInput){
+                switch(userInput.addNewEmployeePrompt){
+                    case "Engineer":
+                        addEngineer();
+                        break;
+                    case "Intern":
+                        addIntern();
+                        break;
+                    case "Manager":
+                        addManager();
+                    default:
+                        HTMLOutput();     
+                }
             }
-        })
+        )
     }
 
+function addEngineer() {
+    inquirer.prompt([
+      
+      {
+        name: "engName",
+        type: "input",
+        message: "What is their name?"
+      },
+
+      {
+        name: "engId",
+        type: "input",
+        message: "What is their ID number?" 
+      },
+
+      {
+        name: "engEmail",
+        type: "input",
+        message: "What is their email address?"
+      },
+
+      {
+        name: "engGithub",
+        type: "input",
+        message: "What is their GitHub username?"
+      }
+
+    ]).then(answers => {
+      const engineer = new Engineer(answers.engName, answers.engId, answers.engEmail, answers.engGithub);
+        teamMembers.push(engineer);
+        // ask if this section is what's causing the error
+        compileEmployees();
+    });
+}
+
+ function addIntern() {
+    inquirer.prompt([
+      
+      {
+        type: "input",
+        name: "internName",
+        message: "What is the intern's name?"
+      },
+
+      {
+        type: "input",
+        name: "internId",
+        message: "What is the intern's employee ID number?" 
+      },
+
+      {
+        type: "input",
+        name: "internEmail",
+        message: "What is the intern's email address?"
+      },
+
+      {
+        type: "input",
+        name: "internSchool",
+        message: "What school does the intern attend?"
+      }
+
+    ]).then(answers => {
+      const intern = new Intern(answers.internName, answers.internId, answers.internEmail, answers.internSchool);
+      teamMembers.push(intern);
+      compileEmployees();
+    });
+
+  }
+
+function addManager() {
+  inquirer.prompt ([
+    
+    {
+      type: "input",
+      name: "managerName",
+      message: "What is the manager's name?"
+    },
+
+    {
+      type: "input",
+      name: "managerId",
+      message: "What is the manager's employee ID number?"
+    },
+
+    {
+      type: "input",
+      name: "managerEmail",
+      message: "What is the manager's email address?"
+    },
+
+    {
+      type: "input",
+      name: "managerOfficeNumber",
+      message: "What is the manager's office number?"
+    }
+
+  ]).then(answers => {
+    const manager = new Manager(answers.managerName, answers.managerId, answers.managerEmail, answers.managerOfficeNumber);
+    teamMembers.push(manager);
+    compileEmployees();
+  });
+
+}
+
+// function htmlOutput () {
+// fs.writeFileSync(outputPath, generateHtml(teamMembers), "UTF-8")
+
+// }
+
+// compileEmployees();
+
+// }
+
+// compileEmployees();
+
+// ask if this might also be the section that's causing it
+
 // const writeFile = data => {
-//     fs.writeFile('./util/index.html', data, err => {
+//     fs.writeFile('./util/generateHtml.js', data, err => {
 //         if (err) {
 //             console.log(err);
 //             return;
@@ -98,15 +167,8 @@ function createTeam(){
 //         }
 //     }))
 
+// function fileBuilder () {
+//     fs.writeFileSync(outputPath, generateTeam(teamMembers))}
+//     addNewEmployee();
 
-function fileBuilder () {
-    fs.writeFileSync(outputPath, generateTeam(teamArray))}
-    addEmployee();
-}
-
-createTeam();
-
-
-
-//
-
+// compileEmployees();
