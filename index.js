@@ -49,7 +49,7 @@ function createTeam(){
             employeeDetail = "school name";
         } else if (role === "Manager"){
             employeeDetail = "office phone number";
-        }
+        }}
         inquirer.prompt([{ 
             name: "employeeDetail",
             message: `What is their ${employeeDetail}?`,
@@ -70,10 +70,10 @@ function createTeam(){
                 newEmployee = new Intern(name, id, email, employeeDetail);
             } else {
                 newEmployee = new Manager(name, id, email, employeeDetail);
-            }
+            })
 
-
-/// i think the issue is here
+        }
+/// i think the issue is here?
 
             employees.push(newEmployee);
             generateHTML(newEmployee)
@@ -85,9 +85,7 @@ function createTeam(){
             })
             }
         })
-    })
-    
-}}
+    }
 
 // const writeFile = data => {
 //     fs.writeFile('./util/index.html', data, err => {
@@ -107,3 +105,8 @@ function fileBuilder () {
 }
 
 createTeam();
+
+
+
+//
+
