@@ -21,8 +21,6 @@ class Employee {
 
     getRole(){
         const obj = new Employee();
-        // const name = obj.name
-        // name();
         return "Employee"
     }
 }
