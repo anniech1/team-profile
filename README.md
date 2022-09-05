@@ -18,7 +18,7 @@ This project uses Node.js, and in order to install this project users should clo
 ## Usage
 For use, follow the prompts that follow after running "node index.js". Users should also run npm i inquirer@8. Below is a video of the deployed project in use.
 
-[Untitled_ Sep 5, 2022 5_58 PM.webm](https://user-images.githubusercontent.com/107431063/188515783-799f5faa-aa80-4fad-b144-c620aa298fe7.webm)
+[Team Profile Walkthrough](https://user-images.githubusercontent.com/107431063/188515783-799f5faa-aa80-4fad-b144-c620aa298fe7.webm)
                            
 ## Credits 
 This project came with additional starter code, written and placed in the Develop folder for Module 10. Additional support about setting up the project came from office hours, support on what switch statements were and how to implement them, restructuring files, and OOP came from tutoring, and support on directing the output HTML file, the dirname method, and fixing syntax errors came from the AskBCs Learning Assistants.
