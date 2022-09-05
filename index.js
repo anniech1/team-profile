@@ -6,14 +6,14 @@ const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 const Manager = require('./lib/Manager');
 
-var teamMembers = [];
+teamMembers = [];
 
 const generateHtml = require('./util/generateHtml')
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
-function addEmployee(){
+function teamGenerator(){
     function addNewEmployee(){
         inquirer.prompt ([
             {
@@ -22,7 +22,7 @@ function addEmployee(){
                 type: "list",
                 choices: ["Engineer","Intern","Manager","None, please generate my HTML file!"]
             }]).then(function(userInput){
-                switch(userInput.addNewEmployeePrompt){
+                switch(userInput.employeeType){
                     case "Engineer":
                         addEngineer();
                         break;
@@ -32,13 +32,13 @@ function addEmployee(){
                     case "Manager":
                         addManager();
                     default:
-                        HTMLOutput();     
+                        htmlOutput();     
                 }
             }
         )
     }
 
-function addEngineer() {
+    function addEngineer() {
     inquirer.prompt([
       
       {
@@ -69,11 +69,11 @@ function addEngineer() {
       const engineer = new Engineer(answers.engName, answers.engId, answers.engEmail, answers.engGithub);
         teamMembers.push(engineer);
         // ask if this section is what's causing the error
-        addEmployee();
+        addNewEmployee();
     });
-}
+    }
 
- function addIntern() {
+    function addIntern() {
     inquirer.prompt([
       
       {
@@ -103,13 +103,13 @@ function addEngineer() {
     ]).then(answers => {
       const intern = new Intern(answers.internName, answers.internId, answers.internEmail, answers.internSchool);
       teamMembers.push(intern);
-      addEmployee();
+      addNewEmployee();
     });
 
   }
 
-function addManager() {
-  inquirer.prompt ([
+    function addManager() {
+    inquirer.prompt ([
     
     {
       name: "managerName",
@@ -138,10 +138,9 @@ function addManager() {
   ]).then(answers => {
     const manager = new Manager(answers.managerName, answers.managerId, answers.managerEmail, answers.managerOfficeNumber);
     teamMembers.push(manager);
-    addEmployee();
+    addNewEmployee();
   });
-
-}
+    }
 
 
 // ask if this might also be the section that's causing it
@@ -161,14 +160,11 @@ function addManager() {
 //     fs.writeFileSync(outputPath, generateTeam(teamMembers))}
 //     addNewEmployee();
 
-// addEmployee();
+// teamGenerator();
 
 function htmlOutput () {
-    fs.writeFileSync(outputPath, generateHtml(teamMembers), "UTF-8")
-    }
-
-addEmployee();
-
+    fs.writeFileSync(outputPath, generateHtml(teamMembers), "UTF-8")}
+    addNewEmployee();
 }
 
-addEmployee();
+teamGenerator();
